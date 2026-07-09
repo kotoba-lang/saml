@@ -13,7 +13,7 @@
      </saml:Subject>
      <saml:Conditions NotBefore=\"2026-07-01T00:00:00Z\" NotOnOrAfter=\"2026-07-01T00:05:00Z\">
        <saml:AudienceRestriction>
-         <saml:Audience>https://sp.example/acs</saml:Audience>
+         <saml:Audience>https://sp.example/metadata</saml:Audience>
        </saml:AudienceRestriction>
      </saml:Conditions>
      <ds:Signature xmlns:ds=\"http://www.w3.org/2000/09/xmldsig#\">
@@ -24,7 +24,7 @@
 (deftest parses-live-saml-assertion-xml
   (is (= {:issuer "https://idp.example"
           :subject "alice"
-          :audience "https://sp.example/acs"
+          :audience "https://sp.example/metadata"
           :not-before "2026-07-01T00:00:00Z"
           :not-on-or-after "2026-07-01T00:05:00Z"
           :assertion-id "assertion-1"

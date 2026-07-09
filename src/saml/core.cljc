@@ -11,6 +11,10 @@
     (when (and (:saml.request/acs-url request)
                (empty? (:saml.assertion/audience out)))
       (throw (ex-info "SAML assertion audience missing" {:saml/request request :saml/result out})))
+    (when (and (:saml.request/issuer request)
+               (:saml.assertion/audience out)
+               (not= (:saml.request/issuer request) (:saml.assertion/audience out)))
+      (throw (ex-info "SAML assertion audience does not match SP issuer" {:saml/request request :saml/result out})))
     out))
 
 (defn verify-once [relay-store port request assertion-ref]
