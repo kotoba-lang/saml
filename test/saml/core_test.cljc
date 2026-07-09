@@ -19,6 +19,18 @@
     (is (thrown? #?(:clj clojure.lang.ExceptionInfo :cljs ExceptionInfo)
                  (c/verify port req "kagi://saml/assertion")))))
 
+(deftest rejects-assertion-issued-for-a-different-sp
+  ;; AudienceRestriction must be checked, not just presence: an assertion
+  ;; whose audience is a different SP's issuer must not be accepted here,
+  ;; or a replayed assertion crosses SP boundaries.
+  (let [req (m/authn-request "s4" {:issuer "victim-sp" :acs-url "https://victim.example/acs"})
+        port (reify p/ISaml
+               (verify-assertion! [_ _ _] (m/assertion-result true {:issuer "idp"
+                                                                    :audience "attacker-sp"
+                                                                    :subject "alice"})))]
+    (is (thrown? #?(:clj clojure.lang.ExceptionInfo :cljs ExceptionInfo)
+                 (c/verify port req "kagi://saml/assertion")))))
+
 (deftest relay-state-is-consumed-once
   (let [req (m/authn-request "s3" {:issuer "sp" :relay-state "relay-1"})
         store (p/memory-relay-state-store #{"relay-1"})
