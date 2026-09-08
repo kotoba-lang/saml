@@ -1,5 +1,5 @@
 (ns saml.adapters.xml-parser-test
-  (:require [clojure.test :refer [deftest is]]
+  (:require [kotoba.lang.text] [clojure.test :refer [deftest is]]
             [saml.adapters.xml :as xml]
             [saml.adapters.xml-parser :as parser]
             [saml.core :as c]
@@ -39,12 +39,12 @@
     (is (= "assertion-1" (:saml.assertion/evidence-ref (c/verify port req assertion))))))
 
 (deftest rejects-unsigned-assertion-when-signature-required
-  (let [unsigned (clojure.string/replace assertion #"<ds:Signature[\s\S]*?</ds:Signature>" "")
+  (let [unsigned (kotoba.lang.text/replace assertion #"<ds:Signature[\s\S]*?</ds:Signature>" "")
         verifier (parser/parsed-xml-verifier)
         out (xml/verify-saml! verifier unsigned {})]
     (is (= :missing-signature (:error out)))))
 
 (deftest allows-unsigned-assertion-when-signature-not-required
-  (let [unsigned (clojure.string/replace assertion #"<ds:Signature[\s\S]*?</ds:Signature>" "")
+  (let [unsigned (kotoba.lang.text/replace assertion #"<ds:Signature[\s\S]*?</ds:Signature>" "")
         verifier (parser/parsed-xml-verifier {:require-signature? false})]
     (is (= "alice" (:subject (xml/verify-saml! verifier unsigned {}))))))

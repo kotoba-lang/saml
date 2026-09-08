@@ -1,5 +1,5 @@
 (ns saml.adapters.xml-parser
-  (:require [clojure.string :as str]
+  (:require [kotoba.lang.text :as str]
             [saml.adapters.xml :as xml])
   (:import [java.io ByteArrayInputStream]
            [javax.xml.parsers DocumentBuilderFactory]

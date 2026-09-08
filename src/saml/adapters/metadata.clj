@@ -1,5 +1,5 @@
 (ns saml.adapters.metadata
-  (:require [clojure.string :as str])
+  (:require [kotoba.lang.text :as str])
   (:import [java.net URI]
            [java.net.http HttpClient HttpRequest HttpResponse$BodyHandlers]))
 
